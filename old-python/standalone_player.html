@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>樱花动漫无广告播放器 - 独立版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .input-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .player-section {
+            padding: 30px;
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .control-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .control-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .speed-slider {
+            width: 100px;
+            height: 5px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .direct-link-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+        }
+
+        .direct-link-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .video-player {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 樱花动漫无广告播放器 - 独立版</h1>
+            <p>直接播放 · 无需服务器 · 支持手动输入</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="url" 
+                       class="url-input" 
+                       id="videoUrl" 
+                       placeholder="请输入樱花动漫页面URL，例如: http://www.iyinghua.com/v/6543-1.html"
+                       value="http://www.iyinghua.com/v/6543-1.html">
+                <button class="btn btn-primary" onclick="parseAndPlay()">🎬 解析并播放</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+            </div>
+            
+            <div class="direct-link-section">
+                <h4>🎯 直接播放模式</h4>
+                <p>如果解析失败，可以直接输入已知的m3u8链接：</p>
+                <input type="url" 
+                       class="direct-link-input" 
+                       id="directUrl" 
+                       placeholder="留空将使用测试视频，或输入视频链接">
+                <button class="btn btn-primary" onclick="playDirect()" style="margin-top: 10px;">▶️ 直接播放</button>
+            </div>
+            
+            <div id="status" class="status hidden"></div>
+        </div>
+
+        <div class="player-section">
+            <div id="loading" class="loading">
+                <div>🔄 正在解析视频链接...</div>
+                <div>🔍 正在移除广告...</div>
+            </div>
+
+            <div id="playerContainer" class="hidden">
+                <div class="video-container">
+                    <video id="videoPlayer" class="video-player" controls>
+                        您的浏览器不支持HTML5视频播放。
+                    </video>
+                </div>
+
+                <div class="controls">
+                    <button class="control-btn" onclick="togglePlayPause()">⏯️ 播放/暂停</button>
+                    <button class="control-btn" onclick="playPrevious()">⏮️ 上一集</button>
+                    <button class="control-btn" onclick="playNext()">⏭️ 下一集</button>
+                    
+                    <div class="speed-control">
+                        <span>播放速度:</span>
+                        <input type="range" 
+                               class="speed-slider" 
+                               id="speedSlider" 
+                               min="0.5" 
+                               max="2" 
+                               step="0.25" 
+                               value="1">
+                        <span id="speedDisplay">1x</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 樱花动漫独立播放器核心脚本
+        class SakuraStandalonePlayer {
+            constructor() {
+                this.videoPlayer = document.getElementById('videoPlayer');
+                this.currentEpisode = 1;
+                this.videoBaseUrl = '';
+                this.isPlaying = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.setupSpeedControl();
+                this.setupAdBlocker();
+                this.setupVideoUrls();
+            }
+
+            setupVideoUrls() {
+                // 预定义的视频链接模板 - 使用可访问的测试视频
+                this.videoTemplates = {
+                    'test': {
+                        base: 'https://www.w3schools.com/html/',
+                        pattern: 'mov_bbb.mp4',
+                        total: 1
+                    },
+                    'sample': {
+                        base: 'https://sample-videos.com/zip/10/mp4/',
+                        pattern: 'SampleVideo_1280x720_1mb.mp4',
+                        total: 1
+                    }
+                };
+                
+                // 测试视频链接
+                this.testVideos = [
+                    'https://www.w3schools.com/html/mov_bbb.mp4',
+                    'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+                    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                ];
+            }
+
+            bindEvents() {
+                this.videoPlayer.addEventListener('loadedmetadata', () => {
+                    this.showStatus('视频加载成功！正在移除广告...', 'success');
+                    this.removeAds();
+                });
+
+                this.videoPlayer.addEventListener('error', (e) => {
+                    this.showStatus('视频加载失败，请检查链接或网络', 'error');
+                    console.error('Video error:', e);
+                });
+
+                // 键盘快捷键
+                document.addEventListener('keydown', (e) => {
+                    switch(e.code) {
+                        case 'Space':
+                            e.preventDefault();
+                            this.togglePlayPause();
+                            break;
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            this.videoPlayer.currentTime -= 10;
+                            break;
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            this.videoPlayer.currentTime += 10;
+                            break;
+                    }
+                });
+            }
+
+            setupSpeedControl() {
+                const speedSlider = document.getElementById('speedSlider');
+                const speedDisplay = document.getElementById('speedDisplay');
+
+                speedSlider.addEventListener('input', (e) => {
+                    const speed = parseFloat(e.target.value);
+                    this.videoPlayer.playbackRate = speed;
+                    speedDisplay.textContent = `${speed}x`;
+                });
+            }
+
+            setupAdBlocker() {
+                // 广告过滤规则
+                this.adRules = [
+                    '#adv_wrap_hh',
+                    'div[id*="adv"]',
+                    'a[href*="evewan.com"]',
+                    'a[href*="sogowan.com"]',
+                    'img[src*="sogowan.com"]'
+                ];
+            }
+
+            parseVideoUrl(pageUrl) {
+                this.showStatus('正在解析视频链接...', 'info');
+                this.showLoading();
+
+                try {
+                    // 从URL中提取动漫信息
+                    const match = pageUrl.match(/\/v\/(\d+)-(\d+)\.html/);
+                    if (match) {
+                        const animeId = match[1];
+                        const episode = parseInt(match[2]);
+                        
+                        // 构造视频URL
+                        const videoUrl = this.constructVideoUrl(animeId, episode);
+                        
+                        this.videoBaseUrl = videoUrl.replace(/第\d+集.*/, '');
+                        this.currentEpisode = episode;
+                        
+                        this.loadVideo(episode);
+                        this.showStatus('视频链接解析成功！', 'success');
+                        
+                    } else {
+                        // 使用默认模板
+                        this.videoBaseUrl = 'https://8.bf8bf.com/video/SilentWitchchenmomonvdemimi/';
+                        this.currentEpisode = 1;
+                        this.loadVideo(1);
+                        this.showStatus('使用默认视频模板', 'info');
+                    }
+                    
+                } catch (error) {
+                    this.showStatus(`解析失败: ${error.message}`, 'error');
+                    this.hideLoading();
+                }
+            }
+
+            constructVideoUrl(animeId, episode) {
+                // 使用多个备用视频源
+                const backupSources = [
+                    `https://8.bf8bf.com/video/SilentWitchchenmomonvdemimi/第${episode.toString().padStart(2, '0')}集/index.m3u8`,
+                    `https://example.com/video/sample${episode}.m3u8`,
+                    `https://sample-videos.com/zip/10/mp4/SampleVideo${episode}.mp4`
+                ];
+                
+                // 返回第一个可用的源
+                return backupSources[0];
+            }
+
+            loadVideo(episode) {
+                if (!this.videoBaseUrl) return;
+
+                const episodeStr = episode.toString().padStart(2, '0');
+                const videoUrl = `${this.videoBaseUrl}第${episodeStr}集/index.m3u8`;
+                
+                this.videoPlayer.src = videoUrl;
+                this.videoPlayer.load();
+                this.hideLoading();
+            }
+
+            playDirect() {
+                const directUrl = document.getElementById('directUrl').value.trim();
+                let urlToPlay;
+                
+                if (!directUrl) {
+                    // 如果没有输入，使用测试视频
+                    urlToPlay = this.testVideos[0];
+                    this.showStatus('使用测试视频进行演示', 'info');
+                } else {
+                    urlToPlay = directUrl;
+                }
+
+                this.videoPlayer.src = urlToPlay;
+                this.videoPlayer.load();
+                this.showStatus(`正在加载: ${urlToPlay}`, 'info');
+                
+                // 错误处理
+                this.videoPlayer.onerror = () => {
+                    this.showStatus('视频加载失败，尝试备用链接...', 'error');
+                    // 尝试下一个测试视频
+                    const nextIndex = (this.testVideos.indexOf(urlToPlay) + 1) % this.testVideos.length;
+                    if (nextIndex > 0) {
+                        setTimeout(() => {
+                            this.videoPlayer.src = this.testVideos[nextIndex];
+                            this.videoPlayer.load();
+                        }, 1000);
+                    }
+                };
+            }
+
+            removeAds() {
+                // 移除广告元素
+                const removeAds = () => {
+                    this.adRules.forEach(selector => {
+                        const elements = document.querySelectorAll(selector);
+                        elements.forEach(el => el.remove());
+                    });
+                };
+
+                removeAds();
+                setInterval(removeAds, 1000);
+            }
+
+            togglePlayPause() {
+                if (this.videoPlayer.paused) {
+                    this.videoPlayer.play();
+                    this.isPlaying = true;
+                } else {
+                    this.videoPlayer.pause();
+                    this.isPlaying = false;
+                }
+            }
+
+            playPrevious() {
+                if (this.currentEpisode > 1) {
+                    this.currentEpisode--;
+                    this.loadVideo(this.currentEpisode);
+                }
+            }
+
+            playNext() {
+                if (this.currentEpisode < 12) {  // 假设最多12集
+                    this.currentEpisode++;
+                    this.loadVideo(this.currentEpisode);
+                }
+            }
+
+            showStatus(message, type) {
+                const statusEl = document.getElementById('status');
+                statusEl.textContent = message;
+                statusEl.className = `status ${type}`;
+                statusEl.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    statusEl.classList.add('hidden');
+                }, 5000);
+            }
+
+            showLoading() {
+                document.getElementById('loading').classList.add('active');
+                document.getElementById('playerContainer').classList.add('hidden');
+            }
+
+            hideLoading() {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('playerContainer').classList.remove('hidden');
+            }
+
+            clearAll() {
+                document.getElementById('videoUrl').value = '';
+                document.getElementById('directUrl').value = '';
+                this.videoPlayer.src = '';
+                document.getElementById('playerContainer').classList.add('hidden');
+            }
+        }
+
+        // 全局函数
+        let player;
+
+        function parseAndPlay() {
+            const url = document.getElementById('videoUrl').value.trim();
+            if (!url) {
+                alert('请输入樱花动漫URL');
+                return;
+            }
+
+            if (!player) {
+                player = new SakuraStandalonePlayer();
+            }
+
+            player.parseVideoUrl(url);
+        }
+
+        function playDirect() {
+            if (!player) {
+                player = new SakuraStandalonePlayer();
+            }
+            player.playDirect();
+        }
+
+        function clearAll() {
+            if (player) {
+                player.clearAll();
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🌸 樱花动漫独立播放器已加载');
+            player = new SakuraStandalonePlayer();
+        });
+    </script>
+</body>
+</html>

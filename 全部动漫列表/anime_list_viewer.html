@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>樱花动漫完整列表 - 按字母分类</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            width: 300px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .category-nav {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 8px 15px;
+            border: none;
+            background: #e9ecef;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .category-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .anime-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .anime-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .anime-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .anime-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .anime-category {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .anime-episode {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .anime-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .anime-links a {
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .detail-link {
+            background: #667eea;
+            color: white;
+        }
+
+        .episode-link {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .anime-links a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .anime-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 樱花动漫完整列表</h1>
+            <p>按字母分类浏览所有动漫</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCount">0</span>
+                    <span>总动漫数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="categoryCount">0</span>
+                    <span>分类数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="currentCount">0</span>
+                    <span>当前显示</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索动漫名称..." />
+            </div>
+            <div class="category-nav" id="categoryNav">
+                <!-- 分类按钮将通过JavaScript生成 -->
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div>📊 正在加载动漫数据...</div>
+        </div>
+
+        <div id="animeGrid" class="anime-grid" style="display: none;">
+            <!-- 动漫卡片将通过JavaScript生成 -->
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <div>🔍 未找到匹配的动漫</div>
+        </div>
+    </div>
+
+    <script>
+        let allAnimeData = [];
+        let filteredData = [];
+        let currentCategory = '全部';
+
+        // 加载JSON数据
+        async function loadAnimeData() {
+            try {
+                const response = await fetch('complete_all_anime_list_20250907_000216.json');
+                allAnimeData = await response.json();
+                
+                // 按字母分类排序
+                allAnimeData.sort((a, b) => {
+                    const categoryA = a.category || '其他';
+                    const categoryB = b.category || '其他';
+                    if (categoryA !== categoryB) {
+                        return categoryA.localeCompare(categoryB);
+                    }
+                    return a.title.localeCompare(b.title);
+                });
+
+                filteredData = [...allAnimeData];
+                
+                // 隐藏加载提示
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('animeGrid').style.display = 'grid';
+                
+                // 更新统计信息
+                updateStats();
+                
+                // 生成分类导航
+                generateCategoryNav();
+                
+                // 渲染动漫列表
+                renderAnimeList();
+                
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                document.getElementById('loading').innerHTML = '<div>❌ 加载数据失败，请检查JSON文件是否存在</div>';
+            }
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            const categories = [...new Set(allAnimeData.map(anime => anime.category || '其他'))];
+            
+            document.getElementById('totalCount').textContent = allAnimeData.length.toLocaleString();
+            document.getElementById('categoryCount').textContent = categories.length;
+            document.getElementById('currentCount').textContent = filteredData.length.toLocaleString();
+        }
+
+        // 生成分类导航
+        function generateCategoryNav() {
+            const categories = [...new Set(allAnimeData.map(anime => anime.category || '其他'))].sort();
+            const nav = document.getElementById('categoryNav');
+            
+            // 添加"全部"按钮
+            const allBtn = document.createElement('button');
+            allBtn.className = 'category-btn active';
+            allBtn.textContent = '全部';
+            allBtn.onclick = () => filterByCategory('全部');
+            nav.appendChild(allBtn);
+
+            // 添加各个分类按钮
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = category;
+                btn.onclick = () => filterByCategory(category);
+                nav.appendChild(btn);
+            });
+        }
+
+        // 按分类筛选
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === category);
+            });
+
+            // 筛选数据
+            if (category === '全部') {
+                filteredData = [...allAnimeData];
+            } else {
+                filteredData = allAnimeData.filter(anime => 
+                    (anime.category || '其他') === category
+                );
+            }
+
+            // 应用搜索过滤
+            applySearchFilter();
+        }
+
+        // 搜索功能
+        function applySearchFilter() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let finalData = filteredData;
+            if (searchTerm) {
+                finalData = filteredData.filter(anime => 
+                    anime.title.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            renderAnimeList(finalData);
+            updateCurrentCount(finalData.length);
+        }
+
+        // 渲染动漫列表
+        function renderAnimeList(data = filteredData) {
+            const grid = document.getElementById('animeGrid');
+            
+            if (data.length === 0) {
+                document.getElementById('animeGrid').style.display = 'none';
+                document.getElementById('noResults').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('animeGrid').style.display = 'grid';
+            document.getElementById('noResults').style.display = 'none';
+
+            grid.innerHTML = data.map(anime => `
+                <div class="anime-card">
+                    <div class="anime-title" title="${anime.title}">${anime.title}</div>
+                    <div class="anime-info">
+                        <span class="anime-category">${anime.category || '其他'}</span>
+                        <span class="anime-episode">${anime.episode_info || '未知'}</span>
+                    </div>
+                    <div class="anime-links">
+                        <a href="${anime.detail_url}" target="_blank" class="detail-link">详情</a>
+                        ${anime.episode_url ? `<a href="${anime.episode_url}" target="_blank" class="episode-link">播放</a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 更新当前显示数量
+        function updateCurrentCount(count) {
+            document.getElementById('currentCount').textContent = count.toLocaleString();
+        }
+
+        // 搜索事件监听
+        document.getElementById('searchInput').addEventListener('input', applySearchFilter);
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', loadAnimeData);
+    </script>
+</body>
+</html>

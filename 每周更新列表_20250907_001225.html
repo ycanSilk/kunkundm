@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>樱花动漫 - 每周更新列表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .update-list {
+            padding: 30px;
+        }
+
+        .update-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .update-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .update-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .update-info {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .update-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .update-link:hover {
+            background: #5a6fd8;
+            transform: scale(1.05);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 樱花动漫每周更新列表</h1>
+            <p>最新动漫更新一览</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">53</span>
+                    <span>更新条目</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="update-list">
+    
+                <div class="update-item">
+                    <div class="update-title">第21集</div>
+                    <div class="update-info">第21集鬼人幻灯抄</div>
+                    <a href="http://www.iyinghua.com/v/6462-21.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集受到猩猩神的庇护的大小姐在王立骑士团受到宠爱</div>
+                    <a href="http://www.iyinghua.com/v/6494-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集测不准的阿波连同学 第二季</div>
+                    <a href="http://www.iyinghua.com/v/6492-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集随兴旅-That’s Journey-</div>
+                    <a href="http://www.iyinghua.com/v/6487-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集爱有些沉重的黑暗精灵从异世界追过来了</div>
+                    <a href="http://www.iyinghua.com/v/6485-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集快藏起来！玛琪娜同学!!</div>
+                    <a href="http://www.iyinghua.com/v/6484-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集搞笑漫画日和GO</div>
+                    <a href="http://www.iyinghua.com/v/6475-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第22集</div>
+                    <div class="update-info">第22集夏日口袋</div>
+                    <a href="http://www.iyinghua.com/v/6490-22.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集#COMPASS2.0 战斗天赋解析系统</div>
+                    <a href="http://www.iyinghua.com/v/6496-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集正义使者 -我的英雄学院之非法英雄-</div>
+                    <a href="http://www.iyinghua.com/v/6491-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集紫云寺家的兄弟姐妹</div>
+                    <a href="http://www.iyinghua.com/v/6498-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集我是星际国家的恶德领主！</div>
+                    <a href="http://www.iyinghua.com/v/6457-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集阳光马达棒球场！</div>
+                    <a href="http://www.iyinghua.com/v/6497-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第11集</div>
+                    <div class="update-info">第11集中禅寺老师的灵怪讲义实录 老师会把谜题全都解开的。</div>
+                    <a href="http://www.iyinghua.com/v/6493-11.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">全集</div>
+                    <div class="update-info">全集记忆缝线</div>
+                    <a href="http://www.iyinghua.com/v/6466-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集华Doll*-Reinterpretation of Flowering-</div>
+                    <a href="http://www.iyinghua.com/v/6501-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集启示录酒店</div>
+                    <a href="http://www.iyinghua.com/v/6500-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集机动战士高达 GQuuuuuuX</div>
+                    <a href="http://www.iyinghua.com/v/6499-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集拜托请穿上，鹰峰同学</div>
+                    <a href="http://www.iyinghua.com/v/6495-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集圣女因太过完美不够可爱而被废除婚约并卖到邻国</div>
+                    <a href="http://www.iyinghua.com/v/6465-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集直至魔女消逝</div>
+                    <a href="http://www.iyinghua.com/v/6460-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第22集</div>
+                    <div class="update-info">第22集外星人姆姆</div>
+                    <a href="http://www.iyinghua.com/v/6502-22.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第17集</div>
+                    <div class="update-info">第17集每日男公关</div>
+                    <a href="http://www.iyinghua.com/v/6503-17.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集摇滚乐是淑女的嗜好</div>
+                    <a href="http://www.iyinghua.com/v/6469-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集忍者与杀手二人组的日常生活</div>
+                    <a href="http://www.iyinghua.com/v/6504-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集瞬间治疗却被视为无用而被流放的天才治疗师</div>
+                    <a href="http://www.iyinghua.com/v/6468-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集最强的国王，第二次的人生要做什么？</div>
+                    <a href="http://www.iyinghua.com/v/6464-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集神统记</div>
+                    <a href="http://www.iyinghua.com/v/6505-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集推理要在晚餐后</div>
+                    <a href="http://www.iyinghua.com/v/6477-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集男女之间的友情存在吗？（不，不存在!!）</div>
+                    <a href="http://www.iyinghua.com/v/6472-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集防风少年 第二季</div>
+                    <a href="http://www.iyinghua.com/v/6470-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第14集</div>
+                    <div class="update-info">第14集真･武士传 剑勇传说</div>
+                    <a href="http://www.iyinghua.com/v/6480-14.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第20集</div>
+                    <div class="update-info">第20集安妮·雪莉</div>
+                    <a href="http://www.iyinghua.com/v/6474-20.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第1231集</div>
+                    <div class="update-info">第1231集名侦探柯南</div>
+                    <a href="http://www.iyinghua.com/v/1412-1231.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第17集</div>
+                    <div class="update-info">第17集每日男公关</div>
+                    <a href="http://www.iyinghua.com/v/6503-17.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集九龙大众浪漫</div>
+                    <a href="http://www.iyinghua.com/v/6476-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集打了300年的史莱姆 不知不觉就练到了满级 第二季</div>
+                    <a href="http://www.iyinghua.com/v/6473-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集炎炎消防队 三之章</div>
+                    <a href="http://www.iyinghua.com/v/6471-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第8集</div>
+                    <div class="update-info">第8集罪恶装备斗争：双重指标</div>
+                    <a href="http://www.iyinghua.com/v/6489-8.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第21集</div>
+                    <div class="update-info">第21集公主的管弦乐团</div>
+                    <a href="http://www.iyinghua.com/v/6506-21.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第22集</div>
+                    <div class="update-info">第22集魔女守护者</div>
+                    <a href="http://www.iyinghua.com/v/6482-22.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第1141集</div>
+                    <div class="update-info">第1141集海贼王</div>
+                    <a href="http://www.iyinghua.com/v/2-1141.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集LAZARUS</div>
+                    <a href="http://www.iyinghua.com/v/6486-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集赛马娘第四季 芦毛灰姑娘</div>
+                    <a href="http://www.iyinghua.com/v/6488-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集黑执事 -绿之魔女篇-</div>
+                    <a href="http://www.iyinghua.com/v/6479-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第24集</div>
+                    <div class="update-info">第24集脱离了A级队伍的我，和从前的徒弟们前往迷宫深处。</div>
+                    <a href="http://www.iyinghua.com/v/6442-24.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第13集</div>
+                    <div class="update-info">第13集古典乐★之星</div>
+                    <a href="http://www.iyinghua.com/v/6478-13.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集mono女孩</div>
+                    <a href="http://www.iyinghua.com/v/6508-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集时光流逝，饭菜依旧美味</div>
+                    <a href="http://www.iyinghua.com/v/6509-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集前桥魔女</div>
+                    <a href="http://www.iyinghua.com/v/6483-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第22集</div>
+                    <div class="update-info">第22集小市民系列</div>
+                    <a href="http://www.iyinghua.com/v/6272-22.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集乡下大叔成为剑圣</div>
+                    <a href="http://www.iyinghua.com/v/6481-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+                <div class="update-item">
+                    <div class="update-title">第12集</div>
+                    <div class="update-info">第12集干杂活我乃最强</div>
+                    <a href="http://www.iyinghua.com/v/6461-12.html" target="_blank" class="update-link">立即观看</a>
+                </div>
+            
+        </div>
+    </div>
+</body>
+</html>
+    

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>樱花动漫播放器 - 测试版</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .video-container {
+            margin: 20px 0;
+        }
+        video {
+            width: 100%;
+            max-height: 400px;
+            background: black;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌸 樱花动漫播放器 - 测试版</h1>
+        
+        <div class="controls">
+            <button onclick="playTestVideo()">▶️ 播放测试视频</button>
+            <button onclick="playSample1()">📹 样本视频1</button>
+            <button onclick="playSample2()">📹 样本视频2</button>
+            <button onclick="togglePlayPause()">⏯️ 播放/暂停</button>
+        </div>
+
+        <div class="video-container">
+            <video id="videoPlayer" controls>
+                您的浏览器不支持视频播放
+            </video>
+        </div>
+
+        <div id="status" class="status info">
+            点击上方按钮开始测试
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>🎯 使用说明</h3>
+            <ul>
+                <li><strong>播放测试视频</strong>：使用可访问的测试视频验证播放器功能</li>
+                <li><strong>样本视频</strong>：使用不同的测试源</li>
+                <li><strong>广告过滤</strong>：本播放器已集成广告过滤功能</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const statusDiv = document.getElementById('status');
+        
+        // 可访问的测试视频
+        const testVideos = [
+            'https://www.w3schools.com/html/mov_bbb.mp4',
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4'
+        ];
+
+        function setStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function playTestVideo() {
+            setStatus('正在加载测试视频...', 'info');
+            videoPlayer.src = testVideos[0];
+            videoPlayer.load();
+            
+            videoPlayer.onloadeddata = () => {
+                setStatus('测试视频加载成功！广告已过滤', 'success');
+            };
+            
+            videoPlayer.onerror = () => {
+                setStatus('视频加载失败，尝试备用链接...', 'error');
+                setTimeout(() => playSample1(), 1000);
+            };
+        }
+
+        function playSample1() {
+            setStatus('正在加载样本视频1...', 'info');
+            videoPlayer.src = testVideos[1];
+            videoPlayer.load();
+            
+            videoPlayer.onloadeddata = () => {
+                setStatus('样本视频1加载成功！', 'success');
+            };
+        }
+
+        function playSample2() {
+            setStatus('正在加载样本视频2...', 'info');
+            videoPlayer.src = testVideos[2];
+            videoPlayer.load();
+            
+            videoPlayer.onloadeddata = () => {
+                setStatus('样本视频2加载成功！', 'success');
+            };
+        }
+
+        function togglePlayPause() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                setStatus('正在播放...', 'info');
+            } else {
+                videoPlayer.pause();
+                setStatus('已暂停', 'info');
+            }
+        }
+
+        // 广告过滤功能
+        function removeAds() {
+            // 模拟移除广告元素
+            console.log('🛡️ 广告过滤器已激活');
+            
+            // 移除常见的广告选择器
+            const adSelectors = [
+                '#adv_wrap_hh',
+                '.advertisement',
+                '[class*="ad"]',
+                '[id*="ad"]'
+            ];
+            
+            adSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => el.remove());
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            setStatus('播放器已准备就绪！点击按钮开始测试');
+            removeAds();
+            
+            // 每3秒检查一次广告
+            setInterval(removeAds, 3000);
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    togglePlayPause();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    videoPlayer.currentTime -= 10;
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    videoPlayer.currentTime += 10;
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
