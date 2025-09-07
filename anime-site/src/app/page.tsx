@@ -1,58 +1,40 @@
-import { Hero } from "@/components/hero"
-import { Navbar } from "@/components/navbar"
-import { WeeklyUpdates } from "@/components/weekly-updates"
-import { mockWeeklyUpdates } from "@/lib/mock-data"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
-export default function Home() {
+import { DailyAnimeSidebar } from "@/components/daily-anime-sidebar"
+import { LatestAnimeGrid } from "@/components/latest-anime-grid"
+import Link from "next/link"
+import HomeSearch from "@/components/home-search"
+import fs from 'fs'
+import path from 'path'
+
+export default async function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <Hero />
+      <Header />
       
-      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="space-y-12">
-          <section id="weekly-updates" className="scroll-mt-20">
-            <div className="mb-8 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                每周更新列表
+      <HomeSearch />
+      
+      <main className="container mx-auto max-w-7xl px-3 py-6 sm:px-4 sm:py-8 lg:px-6 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
+          {/* 左边 - 最新更新 */}
+          <div className="col-span-1 lg:col-span-8">
+            <section id="recommendations" className="scroll-mt-20">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 mb-4 sm:mb-5">
+                  最新更新
               </h2>
-              <p className="mt-4 text-lg text-gray-600">
-                按周一到周日分类的最新动漫更新
-              </p>
-            </div>
-            <WeeklyUpdates updates={mockWeeklyUpdates} />
-          </section>
+              <LatestAnimeGrid />
+            </section>
+          </div>
 
-          <section id="trending" className="scroll-mt-20">
-            <div className="mb-8 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                热门推荐
-              </h2>
-              <p className="mt-4 text-lg text-gray-600">
-                本周最受欢迎的动漫作品
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {/* 这里可以添加热门推荐的卡片 */}
-            </div>
-          </section>
+          {/* 右边 - 每日更新 */}
+          <div className="col-span-1 lg:col-span-4">
+            <DailyAnimeSidebar />
+          </div>
         </div>
       </main>
 
-      <footer className="bg-gray-900 text-white">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold">樱花动漫追踪器</h3>
-            <p className="mt-2 text-gray-400">
-              实时追踪最新动漫更新，不错过任何精彩内容
-            </p>
-            <p className="mt-4 text-sm text-gray-500">
-              © 2025 樱花动漫追踪器. 仅供学习使用
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

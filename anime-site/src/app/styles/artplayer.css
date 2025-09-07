@@ -1,0 +1,87 @@
+/* ArtPlayer 自定义样式 */
+.artplayer-container {
+  --art-theme: #1daef1 !important;
+  --art-background-color: #2678eb !important;
+  --art-text-color: #ffffff !important;
+  --art-border-radius: 0.5rem !important;
+  --art-control-height: 45px !important;
+  --art-bottom-gap: 10px !important;
+}
+
+/* 弹幕样式自定义 */
+.art-danmuku {
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .artplayer-container {
+    --art-control-height: 40px !important;
+    --art-bottom-gap: 5px !important;
+  }
+}
+
+/* 深色主题适配 */
+.art-contextmenu {
+  background: rgba(31, 41, 55, 0.95) !important;
+  border: 1px solid rgba(75, 85, 99, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.art-setting-panel {
+  background: rgba(31, 41, 55, 0.95) !important;
+  border: 1px solid rgba(75, 85, 99, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* 控制栏样式 */
+.art-controls {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent) !important;
+  border-radius: var(--art-border-radius) !important;
+}
+
+/* 进度条样式 - 蓝色主题 */
+.art-progress {
+  height: 4px !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 2px !important;
+}
+
+.art-progress-indicator {
+  background: #3b82f6 !important; /* 蓝色进度条 */
+  border-radius: 2px !important;
+}
+
+.art-progress-buffered {
+  background: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* 音量控制样式 */
+.art-volume-slider {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.art-volume-slider-handle {
+  background: var(--art-theme) !important;
+}
+
+/* 进度条按钮圆形样式 */
+.art-progress-handle {
+  width: 16px !important;
+  height: 16px !important;
+  background: #6da5ff !important;
+  border-radius: 50% !important;
+  border: 2px solid #fff !important;
+  margin-top: -6px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 移除按钮悬停背景 */
+.art-control:hover {
+  background: transparent !important;
+}
+
+/* 全屏模式优化 */
+.art-fullscreen .artplayer-container {
+  border-radius: 0 !important;
+}
