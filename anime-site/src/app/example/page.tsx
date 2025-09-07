@@ -1,15 +1,11 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Hero } from "@/components/hero"
 
 export default function ExamplePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 使用自定义配置的Header（导航栏） */}
       <Header />
-      
-      {/* 使用自定义配置的Hero */}
-      <Hero className="mb-8" />
       
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="text-center">

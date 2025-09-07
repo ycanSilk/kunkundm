@@ -39,6 +39,12 @@ export default function ArtPlayer({
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // 调试输出：开始创建播放器
+    console.group('🎮 ArtPlayer 初始化');
+    console.log('📺 播放URL:', url);
+    console.log('🎬 视频标题:', title);
+    console.groupEnd();
+
     // 创建ArtPlayer实例
     const art = new Artplayer({
       container: containerRef.current,
@@ -109,6 +115,10 @@ export default function ArtPlayer({
       },
       customType: {
         m3u8: function playM3u8(video, url, art) {
+          console.group('🎞️ HLS播放调试');
+          console.log('🎯 HLS URL:', url);
+          console.groupEnd();
+          
           if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(url);
@@ -122,29 +132,48 @@ export default function ArtPlayer({
 
     // 事件监听
     art.on('ready', () => {
-      console.log('ArtPlayer 已就绪');
+      console.group('✅ ArtPlayer 就绪');
+      console.log('🎬 播放器已准备就绪');
+      console.log('📺 当前播放URL:', url);
+      console.groupEnd();
       onReady?.(art);
     });
 
     art.on('play', () => {
+      console.group('▶️ 开始播放');
+      console.log('🎬 正在播放:', title);
+      console.log('📺 播放URL:', url);
+      console.groupEnd();
       onPlay?.();
     });
 
     art.on('pause', () => {
+      console.group('⏸️ 暂停播放');
+      console.log('🎬 已暂停:', title);
+      console.groupEnd();
       onPause?.();
     });
 
     art.on('ended', () => {
+      console.group('🛑 播放结束');
+      console.log('🎬 播放完成:', title);
+      console.groupEnd();
       onEnded?.();
     });
 
     art.on('control:prev', () => {
+      console.group('⏮️ 上一集');
+      console.log('🔄 切换到上一集');
+      console.groupEnd();
       if (hasPrev && onPrev) {
         onPrev();
       }
     });
 
     art.on('control:next', () => {
+      console.group('⏭️ 下一集');
+      console.log('🔄 切换到下一集');
+      console.groupEnd();
       if (hasNext && onNext) {
         onNext();
       }

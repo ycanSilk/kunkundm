@@ -1,13 +1,17 @@
 export interface Anime {
   id: string;
   title: string;
-  episode: string;
+  episodes?: number;
+  episode?: string;
   imageUrl?: string;
+  coverImage?: string;
   description?: string;
-  genres: string[];
-  rating: number;
-  releaseDate: string;
-  url: string;
+  genres?: string[];
+  rating?: number;
+  releaseDate?: string;
+  year?: number;
+  type?: string;
+  url?: string;
 }
 
 export interface WeeklyUpdate {

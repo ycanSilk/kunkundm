@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { crawlerStore } from '@/lib/crawler-store';
 
 // 获取所有动漫列表
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const action = searchParams.get('action');
   
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 }
 
 // 接收Python爬虫数据
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
     const { type, data, source } = body;
@@ -68,18 +68,12 @@ export async function POST(request: NextRequest) {
     }
     
     // 接收爬虫数据（已废弃，请使用 /api/crawler 端点）
-      case 'crawler':
-        return NextResponse.json({
-          success: false,
+    if (type === 'crawler') {
+      return NextResponse.json({
+        success: false,
           error: 'This endpoint is deprecated. Please use /api/crawler instead',
           redirect: '/api/crawler'
         }, { status: 410 });
-        
-      default:
-        return NextResponse.json({
-          success: false,
-          error: 'Invalid type provided'
-        }, { status: 400 });
     }
     
     return NextResponse.json({

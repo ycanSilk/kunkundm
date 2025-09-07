@@ -6,7 +6,7 @@ import path from 'path';
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
+): Promise<NextResponse> {
   try {
     const { id: animeId } = await params;
     
@@ -21,19 +21,23 @@ export async function GET(
     const pythonScript = path.join(process.cwd(), 'src', 'app', 'python', 'crawler_episodes.py');
     
     return new Promise((resolve) => {
-      const pythonProcess = spawn('python', [pythonScript, animeId], {
-        cwd: process.cwd()
+      const pythonProcess = spawn('python', ['-X', 'utf8', pythonScript, animeId], {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PYTHONIOENCODING: 'utf-8'
+        }
       });
 
       let output = '';
       let error = '';
 
       pythonProcess.stdout.on('data', (data) => {
-        output += data.toString();
+        output += data.toString('utf8');
       });
 
       pythonProcess.stderr.on('data', (data) => {
-        error += data.toString();
+        error += data.toString('utf8');
       });
 
       pythonProcess.on('close', (code) => {
@@ -42,34 +46,41 @@ export async function GET(
             const result = JSON.parse(output);
             
             if (result.success) {
-              // 格式化数据以匹配前端需求
-              const formattedData = {
+              // 使用新的数据结构
+            const animeInfo = result.anime_info || {};
+            const episodes = result.episodes || [];
+            
+            // 格式化数据以匹配前端需求
+            const formattedData = {
                 id: animeId,
-                title: result.anime_title,
+                title: animeInfo.title || result.anime_title || '未知动漫',
                 titleEn: '',
-                episodes: result.total_episodes,
-                coverImage: `https://via.placeholder.com/400x600/8B5CF6/FFFFFF?text=${encodeURIComponent(result.anime_title)}`,
-                description: `《${result.anime_title}》是一部精彩的动漫作品，共${result.total_episodes}集。`,
-                fullDescription: `《${result.anime_title}》是一部精彩的动漫作品，共${result.total_episodes}集。`,
+                episodes: result.total_episodes || episodes.length,
+                coverImage: animeInfo.cover_image || `https://via.placeholder.com/400x600/8B5CF6/FFFFFF?text=${encodeURIComponent(animeInfo.title || result.anime_title || 'Anime')}`,
+                description: animeInfo.description || `${animeInfo.title || result.anime_title}`,
+                fullDescription: animeInfo.description || `${animeInfo.title || result.anime_title}`,
                 type: 'TV动画',
-                year: 2024,
+                year: animeInfo.release_date ? new Date(animeInfo.release_date).getFullYear() : 2024,
                 season: '春季',
                 studio: '未知工作室',
-                genres: ['动画', '冒险', '剧情'],
-                rating: 8.5,
+                genres: animeInfo.genres || ['动画', '冒险', '剧情'],
+                rating: animeInfo.rating || 8.5,
                 duration: '24分钟/集',
-                status: '连载中',
+                status: animeInfo.status || '连载中',
                 broadcastDay: '周日',
-                episodesList: result.data.map((episode: any) => ({
-                  id: episode.episode,
-                  title: episode.title,
-                  duration: '24分钟',
-                  airDate: `2024年${Math.floor((episode.episode-1) / 4) + 1}月${((episode.episode-1) % 4) * 7 + 1}日`,
-                  thumbnail: `https://via.placeholder.com/300x200/8B5CF6/FFFFFF?text=EP${episode.episode}`,
-                  description: `${result.anime_title} 第${episode.episode}集`,
-                  url: episode.url
+                region: animeInfo.region || '日本',
+                tags: animeInfo.tags || [],
+                episodesList: episodes.map((episode: any) => ({
+                    id: episode.episode,
+                    title: episode.title,
+                    duration: '24分钟',
+                    airDate: animeInfo.release_date || `2024年${Math.floor((episode.episode-1) / 4) + 1}月${((episode.episode-1) % 4) * 7 + 1}日`,
+                    thumbnail: episode.cover_image || animeInfo.cover_image || `http://www.iyinghua.com/show/${episode.episode}`,
+                    description: `${animeInfo.title || result.anime_title} 第${episode.episode}集`,
+                    url: episode.url || episode.relative_url,
+                    videoUrl: episode.video_url || episode.url || episode.relative_url
                 }))
-              };
+            };
               
               resolve(NextResponse.json({
                 success: true,

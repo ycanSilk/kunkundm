@@ -183,7 +183,11 @@ export default function AnimeDetailPage() {
                 </p>
               </div>
               <button 
-                onClick={() => window.location.href = `/watch/${anime.id}`}
+                onClick={() => {
+                  const firstEpisode = anime.episodesList?.[0];
+                  const url = firstEpisode?.videoUrl || firstEpisode?.url || '';
+                  window.location.href = `/watch/${anime.id}?episode=1&url=${encodeURIComponent(url)}&title=${encodeURIComponent(anime.title)}&totalEpisodes=${anime.episodes}&cover=${encodeURIComponent(anime.coverImage)}`;
+                }}
                 className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center"
               >
                 <Play className="h-5 w-5 mr-2" />
@@ -204,7 +208,7 @@ export default function AnimeDetailPage() {
                 {anime.episodesList.map((episode: any) => (
                   <a
                     key={episode.id}
-                    href={`/watch/${anime.id}?episode=${episode.id}`}
+                    href={`/watch/${anime.id}?episode=${episode.id}&url=${encodeURIComponent(episode.videoUrl || episode.url)}&title=${encodeURIComponent(anime.title)}&totalEpisodes=${anime.episodes}&cover=${encodeURIComponent(anime.coverImage)}`}
                     className={`block border rounded text-center cursor-pointer transition-all duration-300 hover:shadow-md hover:bg-gray-50 ${
                       selectedEpisode === episode.id
                         ? 'border-purple-500 bg-purple-50'

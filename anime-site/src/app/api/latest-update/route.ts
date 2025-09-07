@@ -69,7 +69,7 @@ async function getRealLatestUpdates(limit: number = 50): Promise<LatestUpdateIte
     const pythonPath = path.join(process.cwd(), 'src', 'app', 'python', 'crawler_manager.py');
     const pythonExecutable = process.platform === 'win32' ? 'python' : 'python3';
     
-    const process = spawn(pythonExecutable, [pythonPath, 'latest', limit.toString()], {
+    const pythonProcess = spawn(pythonExecutable, [pythonPath, 'latest', limit.toString()], {
       cwd: path.join(process.cwd(), 'src', 'app', 'python'),
       env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
     });
@@ -77,15 +77,15 @@ async function getRealLatestUpdates(limit: number = 50): Promise<LatestUpdateIte
     let stdout = '';
     let stderr = '';
 
-    process.stdout.on('data', (data) => {
+    pythonProcess.stdout.on('data', (data) => {
       stdout += data.toString();
     });
 
-    process.stderr.on('data', (data) => {
+    pythonProcess.stderr.on('data', (data) => {
       stderr += data.toString();
     });
 
-    process.on('close', (code) => {
+    pythonProcess.on('close', (code) => {
       if (code !== 0) {
         console.error('Python爬虫执行错误:', stderr);
         // 如果爬虫失败，使用模拟数据作为回退
@@ -136,7 +136,7 @@ async function getRealLatestUpdates(limit: number = 50): Promise<LatestUpdateIte
       }
     });
 
-    process.on('error', (error) => {
+    pythonProcess.on('error', (error) => {
       console.error('启动Python进程失败:', error);
       console.log('使用模拟数据作为回退');
       resolve(getMockLatestUpdates());
@@ -144,7 +144,7 @@ async function getRealLatestUpdates(limit: number = 50): Promise<LatestUpdateIte
 
     // 设置超时
     setTimeout(() => {
-      process.kill();
+      pythonProcess.kill();
       console.log('Python爬虫超时，使用模拟数据');
       resolve(getMockLatestUpdates());
     }, 15000);
@@ -176,7 +176,7 @@ async function saveLatestUpdatesToFile(data: LatestUpdateItem[]): Promise<string
 }
 
 // 获取最新更新
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '20');
@@ -247,7 +247,7 @@ export async function GET(request: NextRequest) {
 }
 
 // 支持POST请求（用于触发实时爬取）
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
     const { useRealData = true, limit = 50, saveToFile = true } = body;

@@ -2,22 +2,22 @@ import { getCrawlerConfig } from '@/config/api.config';
 
 // 爬虫服务接口
 export interface CrawlerService {
-  crawlLatestUpdates(): Promise<any>;
-  crawlSearchResults(query: string): Promise<any>;
-  crawlAnimeList(): Promise<any>;
-  crawlEpisodes(animeId: string): Promise<any>;
-  crawlVideoUrl(animeId: string, episode: string): Promise<any>;
+  crawlLatestUpdates(): Promise<unknown>;
+  crawlSearchResults(query: string): Promise<unknown>;
+  crawlAnimeList(): Promise<unknown>;
+  crawlEpisodes(animeId: string): Promise<unknown>;
+  crawlVideoUrl(animeId: string, episode: string): Promise<unknown>;
 }
 
 // 最新更新爬虫服务
 export class LatestUpdateService {
-  private config: any;
+  private config: Record<string, string>;
 
   constructor() {
     this.config = getCrawlerConfig('latest_update');
   }
 
-  async crawlLatestUpdates(): Promise<any> {
+  async crawlLatestUpdates(): Promise<unknown> {
     try {
       // 这里可以调用Python爬虫脚本
       const response = await fetch('http://localhost:8000/api/crawler/latest-update', {
@@ -41,7 +41,7 @@ export class LatestUpdateService {
     }
   }
 
-  private getMockData() {
+  private getMockData(): Record<string, unknown> {
     return {
       success: true,
       data: [
@@ -83,29 +83,29 @@ export class CrawlerManager {
     return CrawlerManager.instance;
   }
 
-  public async getLatestUpdates(): Promise<any> {
+  public async getLatestUpdates(): Promise<unknown> {
     return this.latestUpdateService.crawlLatestUpdates();
   }
 
-  public async getSearchResults(query: string): Promise<any> {
+  public async getSearchResults(query: string): Promise<unknown> {
     // 集成搜索爬虫
     const config = getCrawlerConfig('search');
     return { query, config };
   }
 
-  public async getCompleteList(): Promise<any> {
+  public async getCompleteList(): Promise<unknown> {
     // 集成完整列表爬虫
     const config = getCrawlerConfig('complete_list');
     return { config };
   }
 
-  public async getEpisodes(animeId: string): Promise<any> {
+  public async getEpisodes(animeId: string): Promise<unknown> {
     // 集成分集爬虫
     const config = getCrawlerConfig('episode_crawler');
     return { animeId, config };
   }
 
-  public async getVideoUrl(animeId: string, episode: string): Promise<any> {
+  public async getVideoUrl(animeId: string, episode: string): Promise<unknown> {
     // 集成视频解析爬虫
     const config = getCrawlerConfig('video_parser');
     return { animeId, episode, config };

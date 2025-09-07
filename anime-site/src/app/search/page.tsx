@@ -4,54 +4,7 @@ import { useState } from 'react';
 import AnimeSearch from '@/components/anime-search';
 import { Anime } from '@/types/anime';
 
-// 模拟数据
-const mockAnimeData: Anime[] = [
-  {
-    id: '1',
-    title: '葬送的芙莉莲',
-    episodes: 28,
-    coverImage: 'https://via.placeholder.com/300x400/8B5CF6/FFFFFF?text=葬送的芙莉莲',
-    description: '打倒魔王的勇者一行人的后日谈',
-    type: 'TV',
-    year: 2023
-  },
-  {
-    id: '2',
-    title: '迷宫饭',
-    episodes: 24,
-    coverImage: 'https://via.placeholder.com/300x400/10B981/FFFFFF?text=迷宫饭',
-    description: '在迷宫中吃魔物的奇幻冒险',
-    type: 'TV',
-    year: 2024
-  },
-  {
-    id: '3',
-    title: '怪兽8号',
-    episodes: 12,
-    coverImage: 'https://via.placeholder.com/300x400/F59E0B/FFFFFF?text=怪兽8号',
-    description: '人类与怪兽的战斗故事',
-    type: 'TV',
-    year: 2024
-  },
-  {
-    id: '4',
-    title: '无职转生',
-    episodes: 23,
-    coverImage: 'https://via.placeholder.com/300x400/EF4444/FFFFFF?text=无职转生',
-    description: '异世界转生冒险故事',
-    type: 'TV',
-    year: 2021
-  },
-  {
-    id: '5',
-    title: '间谍过家家',
-    episodes: 25,
-    coverImage: 'https://via.placeholder.com/300x400/3B82F6/FFFFFF?text=间谍过家家',
-    description: '间谍家庭的喜剧日常',
-    type: 'TV',
-    year: 2022
-  }
-];
+// 真实数据将通过API获取
 
 export default function SearchPage() {
   const [searchResults, setSearchResults] = useState<Anime[]>([]);
@@ -60,14 +13,22 @@ export default function SearchPage() {
   const handleSearch = (query: string) => {
     setLoading(true);
     
-    // 模拟搜索延迟
-    setTimeout(() => {
-      const filtered = mockAnimeData.filter(anime =>
-        anime.title.toLowerCase().includes(query.toLowerCase())
-      );
-      setSearchResults(filtered);
-      setLoading(false);
-    }, 500);
+    // 调用真实API搜索
+    fetch(`/api/anime?action=search&q=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setSearchResults(data.data);
+        } else {
+          setSearchResults([]);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('搜索失败:', error);
+        setSearchResults([]);
+        setLoading(false);
+      });
   };
 
   return (

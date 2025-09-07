@@ -57,7 +57,7 @@ export function useLatestUpdates(limit: number = 20, realData: boolean = false) 
 }
 
 // 手动触发爬取
-export async function triggerCrawler(type: string, params?: any): Promise<CrawlerResponse> {
+export async function triggerCrawler(type: string, params?: Record<string, unknown>): Promise<CrawlerResponse> {
   try {
     const response = await fetch(`/api/crawler/${type}`, {
       method: 'POST',

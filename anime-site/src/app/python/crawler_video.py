@@ -1,154 +1,64 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-樱花动漫视频URL解析器 - API版本
-解析动漫页面URL为真实视频地址
-"""
-
 import requests
 from bs4 import BeautifulSoup
-import re
 import json
-from urllib.parse import urlparse
-from typing import Dict, Optional
-from datetime import datetime
+import sys
 
-class VideoCrawler:
-    """视频URL解析爬虫类"""
-    
-    def __init__(self, base_url: str = "http://www.iyinghua.com"):
-        self.base_url = base_url
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Connection': 'keep-alive',
-        }
-    
-    def parse_video_url(self, page_url: str) -> Dict:
-        """解析视频URL
+def get_real_video_url(page_url: str) -> str:
+    """爬取真实视频URL并返回"""
+    try:
+        html = requests.get(page_url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=3).text
+        soup = BeautifulSoup(html, 'lxml')
         
-        Args:
-            page_url: 动漫播放页面URL
-            
-        Returns:
-            视频信息字典
-        """
-        if not self._validate_url(page_url):
-            raise ValueError("无效的页面URL")
-        
-        try:
-            response = requests.get(page_url, headers=self.headers, timeout=30)
-            response.raise_for_status()
-            response.encoding = 'utf-8'
-            
-            return self._extract_video_url(response.text, page_url)
-            
-        except requests.RequestException as e:
-            raise Exception(f"网络请求失败: {str(e)}")
-    
-    def _validate_url(self, url: str) -> bool:
-        """验证URL格式"""
-        if not url:
-            return False
-        if 'iyinghua.com' not in url:
-            return False
-        if not url.startswith('http'):
-            return False
-        return True
-    
-    def _extract_video_url(self, html_content: str, page_url: str) -> Dict:
-        """从HTML内容中提取视频URL"""
-        
-        # 提取页面标题
-        title_match = re.search(r'<title[^>]*>([^<]+)</title>', html_content, re.IGNORECASE)
-        title = title_match.group(1).strip() if title_match else "未知视频"
-        
-        # 提取集数信息
-        episode_match = re.search(r'第(\d+)集', title)
-        current_episode = int(episode_match.group(1)) if episode_match else 1
-        
-        # 提取视频URL - 多种策略
-        video_url = None
-        
-        # 策略1: 直接提取tup格式URL
-        tup_pattern = r'["\'](https?://tup\.iyinghua\.com/\?vid=https?://[^"\']+\.m3u8[^"\']*)["\']'
-        matches = re.findall(tup_pattern, html_content)
-        if matches:
-            video_url = matches[0]
-        
-        # 策略2: 提取vid参数并构造URL
-        if not video_url:
-            vid_pattern = r'["\']vid["\']:\s*["\'](https?://[^"\']+\.m3u8[^"\']*)["\']'
-            vid_matches = re.findall(vid_pattern, html_content)
-            if vid_matches:
-                video_url = f"https://tup.iyinghua.com/?vid={vid_matches[0]}"
-        
-        # 策略3: 提取其他m3u8 URL
-        if not video_url:
-            m3u8_patterns = [
-                r'["\'](https?://[^"\']*bf8bf\.com[^"\']*\.m3u8[^"\']*)["\']',
-                r'["\'](https?://[^"\']*\.m3u8[^"\']*)["\']'
-            ]
-            for pattern in m3u8_patterns:
-                matches = re.findall(pattern, html_content)
-                if matches:
-                    video_url = f"https://tup.iyinghua.com/?vid={matches[0]}"
+        # 查找data-vid属性
+        vid = (soup.find('div', id='playbox') or {}).get('data-vid')
+        if not vid:
+            for div in soup.find_all('div', {'data-vid': True}):
+                if div.get('data-vid', '').startswith('http'):
+                    vid = div['data-vid']
                     break
         
-        # 提取总集数
-        total_episodes = 12  # 默认值
-        episode_list_pattern = r'共(\d+)集'
-        total_match = re.search(episode_list_pattern, html_content)
-        if total_match:
-            total_episodes = int(total_match.group(1))
-        
-        return {
-            'video_url': video_url,
-            'title': title,
-            'current_episode': current_episode,
-            'total_episodes': total_episodes,
-            'source_url': page_url,
-            'parsed_at': datetime.now().isoformat()
-        }
-
-def get_video_url(page_url: str) -> Dict:
-    """获取视频URL的API接口函数
-    
-    Args:
-        page_url: 动漫播放页面URL
-        
-    Returns:
-        包含视频信息的响应字典
-    """
-    crawler = VideoCrawler()
-    
-    try:
-        video_info = crawler.parse_video_url(page_url)
-        
-        return {
-            'success': True,
-            'data': video_info,
-            'timestamp': datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        return {
-            'success': False,
-            'error': str(e),
-            'data': {
-                'video_url': None,
-                'title': '解析失败',
-                'current_episode': 1,
-                'total_episodes': 1,
-                'source_url': page_url,
-                'parsed_at': datetime.now().isoformat()
-            },
-            'timestamp': datetime.now().isoformat()
-        }
+        if vid:
+            # 只提取干净的URL片段，不做任何拼接
+            # 去除/index.m3u8$mp4后缀，返回基础路径
+            base_path = vid.replace('/index.m3u8$mp4', '')
+            
+            # 找到最后一个斜杠的位置，获取目录名
+            last_slash_index = base_path.rfind('/')
+            if last_slash_index != -1:
+                # 返回基础URL和目录名，让后端处理拼接
+                clean_base_url = base_path[:last_slash_index]  # 不包含最后一级目录
+                return clean_base_url
+            
+            # 如果没有斜杠，返回原始URL
+            return vid
+        return ""
+    except:
+        return ""
 
 if __name__ == "__main__":
-    # 测试函数
-    test_url = "http://www.iyinghua.com/v/6543-1.html"
-    result = get_video_url(test_url)
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    import os
+    import sys
+    
+    # 设置环境变量以支持UTF-8编码
+    os.environ['PYTHONIOENCODING'] = 'utf-8'
+    
+    # 确保标准输出使用UTF-8编码
+    if sys.version_info >= (3, 7):
+        sys.stdout.reconfigure(encoding='utf-8')
+    else:
+        import codecs
+        sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer)
+    
+    try:
+        url = get_real_video_url(sys.argv[1] if len(sys.argv) > 1 else "http://www.iyinghua.com/v/6473-1.html")
+        result = json.dumps({'url': url}, ensure_ascii=False)
+        print(result)
+    except UnicodeEncodeError as e:
+        # 如果仍然出现编码错误，使用ASCII转义
+        url = get_real_video_url(sys.argv[1] if len(sys.argv) > 1 else "http://www.iyinghua.com/v/6473-1.html")
+        result = json.dumps({'url': url}, ensure_ascii=True)
+        print(result)
+    except Exception as e:
+        print(json.dumps({'error': str(e)}, ensure_ascii=False))
